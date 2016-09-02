@@ -43,18 +43,35 @@ public class UsuarioController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 			System.out.println("Requisição pelo método GET !");
-			
 			Usuario usuario = new Usuario();
-			
-			usuario.setNome(request.getParameter("nome"));
-			usuario.setLogin(request.getParameter("login"));
-			usuario.setSenha(request.getParameter("senha"));
-			
+			String acao = request.getParameter("acao");
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
 			
-			usuarioDAO.salvar(usuario);
+			if(acao != null && !acao.isEmpty()){
+				if(acao.equals("exc")){
+					String id = request.getParameter("id");
+					
+					if(id != null && !id.isEmpty()){
+						usuario.setId(Integer.parseInt(id));
+						Usuario usuExc = new Usuario();
+						usuExc.setId(Integer.parseInt(id));
+						
+						usuarioDAO.excluir(usuExc);
+						
+						response.getWriter().print("Removido com Sucesso!");
+					}
+				}
+			}
+			
+//			usuario.setNome(request.getParameter("nome"));
+//			usuario.setLogin(request.getParameter("login"));
+//			usuario.setSenha(request.getParameter("senha"));
+//			
+//			
+//			
+//			usuarioDAO.salvar(usuario);
 
-			response.getWriter().print("Salvo com Sucesso!");
+			
 	}
 
 	/**
@@ -63,8 +80,27 @@ public class UsuarioController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// doGet(request, response);
 		System.out.println("Requisição pelo método POST !");
+		
+		Usuario usuario = new Usuario();
+		
+		String id = request.getParameter("id");
+		
+		if(id != null && !id.isEmpty()){
+			usuario.setId(Integer.parseInt(id));
+		}
+		
+		
+		usuario.setNome(request.getParameter("nome"));
+		usuario.setLogin(request.getParameter("login"));
+		usuario.setSenha(request.getParameter("senha"));
+		
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		
+		usuarioDAO.salvar(usuario);
+
+		response.getWriter().print("Salvo com Sucesso!");
+
 	}
 
 }
