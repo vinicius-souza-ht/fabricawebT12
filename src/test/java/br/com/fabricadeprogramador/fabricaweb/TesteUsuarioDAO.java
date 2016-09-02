@@ -11,9 +11,10 @@ public class TesteUsuarioDAO {
 		// testeCadastrar();
 		// testeAlterar();
 		// testeExcluir();
-		// testeSavar();
+		 testeSavar();
 		// testeBuscarPorId();
-		testeBuscarTodos();
+		// testeBuscarTodos();
+//		testeAutenticar();
 	}
 
 	private static void testeCadastrar() {
@@ -53,7 +54,7 @@ public class TesteUsuarioDAO {
 
 		usuario.setId(4);
 		usuario.setNome("Carlos Alberto");
-		usuario.setLogin("carA");
+		usuario.setLogin("carAAA");
 		usuario.setSenha("1234");
 
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
@@ -77,6 +78,22 @@ public class TesteUsuarioDAO {
 
 		for (Usuario usuario : lista) {
 			System.out.println(usuario);
+		}
+	}
+
+	private static void testeAutenticar() {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		Usuario usuario = new Usuario();
+
+		usuario.setLogin("carA");
+		usuario.setSenha("1234");
+
+		Usuario usuRetorno = usuarioDAO.autenticar(usuario);
+
+		if (usuRetorno != null) {
+			System.out.println(usuRetorno);
+		} else {
+			System.out.println("Erro de autenticação !");
 		}
 	}
 

@@ -12,7 +12,7 @@ import br.com.fabricadeprogramador.persistencia.entidade.Usuario;
 public class UsuarioDAO {
 
 	Connection conn = ConexaoFactory.getConnection();
-
+	
 	public void cadastrar(Usuario usuario) {
 
 		String sql = "INSERT INTO usuario (nome, login, senha) VALUES (?, ?, MD5(?))";
@@ -132,6 +132,36 @@ public class UsuarioDAO {
 		}
 
 		return listaRetorno;
+	}
+	
+	public Usuario autenticar(Usuario usuConsulta){
+		
+		Usuario usuRetorno = null;
+		
+		String sql = "SELECT * FROM usuario WHERE login = ? AND senha = MD5(?)";
+		
+		try (PreparedStatement preparador = conn.prepareStatement(sql)){
+			
+			preparador.setString(1, usuConsulta.getLogin());
+			preparador.setString(2, usuConsulta.getSenha());
+			
+			ResultSet resultado = preparador.executeQuery();
+			
+			if(resultado.next()){
+				usuRetorno = new Usuario();
+				usuRetorno.setId(resultado.getInt("id"));
+				usuRetorno.setNome(resultado.getString("nome"));
+				usuRetorno.setLogin(resultado.getString("login"));
+				usuRetorno.setSenha(resultado.getString("senha"));
+				
+				System.out.println("Usuário Autenticado !");
+			}
+			
+		} catch(SQLException e){
+			throw new RuntimeException(e);
+		}
+		
+		return usuRetorno;
 	}
 
 }

@@ -8,8 +8,9 @@ public class ConexaoFactory {
 
 	public static Connection getConnection(){
 		try{
+			Class.forName("org.postgresql.Driver");	
 			return DriverManager.getConnection("jdbc:postgresql://localhost:5432/fabricaweb_db", "postgres", "postgres");
-		} catch(SQLException e){
+		} catch(SQLException | ClassNotFoundException e){
 			throw new RuntimeException("Não conectou com o banco!", e);
 		}
 	}
