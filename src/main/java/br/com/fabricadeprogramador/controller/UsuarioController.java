@@ -61,13 +61,12 @@ public class UsuarioController extends HttpServlet {
 
 					response.getWriter().print("Removido com Sucesso!");
 				}
-			} else if(acao.equals("lis")){
+			} else if (acao.equals("lis")) {
 				List<Usuario> lista = usuarioDAO.buscarTodos();
-				
+
 				request.setAttribute("lista", lista);
-				
-				request.getRequestDispatcher("WEB-INF/listausuarios.jsp")
-											.forward(request, response);
+
+				request.getRequestDispatcher("WEB-INF/listausuarios.jsp").forward(request, response);
 			}
 		}
 
@@ -89,23 +88,44 @@ public class UsuarioController extends HttpServlet {
 			throws ServletException, IOException {
 		System.out.println("Requisição pelo método POST !");
 
-		Usuario usuario = new Usuario();
+		String acao = request.getParameter("acao");
 
-		String id = request.getParameter("id");
+		if (acao != null && !acao.isEmpty()) {
+			
+			UsuarioDAO usuarioDAO = new UsuarioDAO();
+			
+			if (acao.equals("salvar")) {
+				Usuario usuario = new Usuario();
 
-		if (id != null && !id.isEmpty()) {
-			usuario.setId(Integer.parseInt(id));
+				String id = request.getParameter("id");
+
+				if (id != null && !id.isEmpty()) {
+					usuario.setId(Integer.parseInt(id));
+				}
+
+				usuario.setNome(request.getParameter("nome"));
+				usuario.setLogin(request.getParameter("login"));
+				usuario.setSenha(request.getParameter("senha"));
+
+				
+
+				usuarioDAO.salvar(usuario);
+
+				response.getWriter().print("Salvo com Sucesso!");
+
+			} else if(acao.equals("exc")){
+				//Captura todos os id checados
+				String ids[] = request.getParameterValues("id");
+				
+				for (String id : ids) {
+					Usuario usuExcluir = new Usuario();
+					usuExcluir.setId(Integer.parseInt(id));
+					
+					usuarioDAO.excluir(usuExcluir);
+				}
+				response.sendRedirect("usucontroller.do?acao=lis");
+			}
 		}
-
-		usuario.setNome(request.getParameter("nome"));
-		usuario.setLogin(request.getParameter("login"));
-		usuario.setSenha(request.getParameter("senha"));
-
-		UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-		usuarioDAO.salvar(usuario);
-
-		response.getWriter().print("Salvo com Sucesso!");
 
 	}
 

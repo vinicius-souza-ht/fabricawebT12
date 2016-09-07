@@ -14,13 +14,15 @@
 	//Capturando a lista do request
 	List<Usuario> lista = (List<Usuario>)request.getAttribute("lista");
 %>
-
+<form method="post" action="usucontroller.do">
+<input type="hidden" name="acao" value="exc">
 <table border="1">
 	<tr bgcolor="#eaeaea">
 		<td>ID</td>
 		<td>NOME</td>
 		<td>LOGIN</td>
 		<td>SENHA</td>
+		<td>Selecione</td>
 	</tr>
 	
 	<%for (Usuario usuario : lista) {%>
@@ -29,10 +31,16 @@
 		<td><%= usuario.getNome()%></td>
 		<td><%= usuario.getLogin()%></td>
 		<td><%= usuario.getSenha()%></td>
+		
+		<td>
+			<input type="checkbox" name="id" value="<%=usuario.getId()%>">
+		</td>
 	</tr>
 	
 	<%}%>
 	
 </table>
+	<input type="submit" value="Excluir">
+</form>
 </body>
 </html>
