@@ -1,6 +1,7 @@
 package br.com.fabricadeprogramador.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -42,36 +43,42 @@ public class UsuarioController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-			System.out.println("Requisição pelo método GET !");
-			Usuario usuario = new Usuario();
-			String acao = request.getParameter("acao");
-			UsuarioDAO usuarioDAO = new UsuarioDAO();
-			
-			if(acao != null && !acao.isEmpty()){
-				if(acao.equals("exc")){
-					String id = request.getParameter("id");
-					
-					if(id != null && !id.isEmpty()){
-						usuario.setId(Integer.parseInt(id));
-						Usuario usuExc = new Usuario();
-						usuExc.setId(Integer.parseInt(id));
-						
-						usuarioDAO.excluir(usuExc);
-						
-						response.getWriter().print("Removido com Sucesso!");
-					}
-				}
-			}
-			
-//			usuario.setNome(request.getParameter("nome"));
-//			usuario.setLogin(request.getParameter("login"));
-//			usuario.setSenha(request.getParameter("senha"));
-//			
-//			
-//			
-//			usuarioDAO.salvar(usuario);
+		System.out.println("Requisição pelo método GET !");
+		Usuario usuario = new Usuario();
+		String acao = request.getParameter("acao");
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-			
+		if (acao != null && !acao.isEmpty()) {
+			if (acao.equals("exc")) {
+				String id = request.getParameter("id");
+
+				if (id != null && !id.isEmpty()) {
+					usuario.setId(Integer.parseInt(id));
+					Usuario usuExc = new Usuario();
+					usuExc.setId(Integer.parseInt(id));
+
+					usuarioDAO.excluir(usuExc);
+
+					response.getWriter().print("Removido com Sucesso!");
+				}
+			} else if(acao.equals("lis")){
+				List<Usuario> lista = usuarioDAO.buscarTodos();
+				
+				request.setAttribute("lista", lista);
+				
+				request.getRequestDispatcher("WEB-INF/listausuarios.jsp")
+											.forward(request, response);
+			}
+		}
+
+		// usuario.setNome(request.getParameter("nome"));
+		// usuario.setLogin(request.getParameter("login"));
+		// usuario.setSenha(request.getParameter("senha"));
+		//
+		//
+		//
+		// usuarioDAO.salvar(usuario);
+
 	}
 
 	/**
@@ -81,22 +88,21 @@ public class UsuarioController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Requisição pelo método POST !");
-		
+
 		Usuario usuario = new Usuario();
-		
+
 		String id = request.getParameter("id");
-		
-		if(id != null && !id.isEmpty()){
+
+		if (id != null && !id.isEmpty()) {
 			usuario.setId(Integer.parseInt(id));
 		}
-		
-		
+
 		usuario.setNome(request.getParameter("nome"));
 		usuario.setLogin(request.getParameter("login"));
 		usuario.setSenha(request.getParameter("senha"));
-		
+
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		
+
 		usuarioDAO.salvar(usuario);
 
 		response.getWriter().print("Salvo com Sucesso!");
