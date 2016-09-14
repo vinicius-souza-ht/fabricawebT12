@@ -67,6 +67,25 @@ public class UsuarioController extends HttpServlet {
 				request.setAttribute("lista", lista);
 
 				request.getRequestDispatcher("WEB-INF/listausuarios.jsp").forward(request, response);
+			} else if (acao.equals("alt")) {
+
+				String id = request.getParameter("id");
+				Usuario usuAlt = usuarioDAO.buscarPorId(Integer.parseInt(id));
+
+				request.setAttribute("usu", usuAlt);
+
+				request.getRequestDispatcher("WEB-INF/formusuario.jsp").forward(request, response);
+			} else if (acao.equals("cad")) {
+
+				Usuario usuCad = new Usuario();
+				usuCad.setId(0);
+				usuCad.setNome("");
+				usuCad.setLogin("");
+				usuCad.setSenha("");
+
+				request.setAttribute("usu", usuCad);
+
+				request.getRequestDispatcher("WEB-INF/formusuario.jsp").forward(request, response);
 			}
 		}
 
@@ -91,9 +110,9 @@ public class UsuarioController extends HttpServlet {
 		String acao = request.getParameter("acao");
 
 		if (acao != null && !acao.isEmpty()) {
-			
+
 			UsuarioDAO usuarioDAO = new UsuarioDAO();
-			
+
 			if (acao.equals("salvar")) {
 				Usuario usuario = new Usuario();
 
@@ -107,20 +126,21 @@ public class UsuarioController extends HttpServlet {
 				usuario.setLogin(request.getParameter("login"));
 				usuario.setSenha(request.getParameter("senha"));
 
-				
-
 				usuarioDAO.salvar(usuario);
-
-				response.getWriter().print("Salvo com Sucesso!");
-
-			} else if(acao.equals("exc")){
-				//Captura todos os id checados
-				String ids[] = request.getParameterValues("id");
 				
+				String msg = "<script>" + "alert('Salvo com sucesso!'); " + 
+							 "location.href='usucontroller.do?acao=lis';" + 
+						     "</script>";
+				 response.getWriter().print(msg);
+
+			} else if (acao.equals("exc")) {
+				// Captura todos os id checados
+				String ids[] = request.getParameterValues("id");
+
 				for (String id : ids) {
 					Usuario usuExcluir = new Usuario();
 					usuExcluir.setId(Integer.parseInt(id));
-					
+
 					usuarioDAO.excluir(usuExcluir);
 				}
 				response.sendRedirect("usucontroller.do?acao=lis");

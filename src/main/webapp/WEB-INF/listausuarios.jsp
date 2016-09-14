@@ -34,6 +34,7 @@
 		
 		<td>
 			<input type="checkbox" name="id" value="<%=usuario.getId()%>">
+			<a href="usucontroller.do?acao=alt&id=<%=usuario.getId()%>">Alterar</a>
 		</td>
 	</tr>
 	
@@ -41,6 +42,7 @@
 	
 </table>
 	<input type="submit" value="Excluir">
+	<input type="button" value="Novo" onclick ="location.href='usucontroller.do?acao=cad'" />
 </form>
 </body>
 </html>
